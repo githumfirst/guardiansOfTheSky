@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3D Air Fighter</title>
+  <script type="module" crossorigin src="/assets/index-B8KejBK6.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-gdGPfqSp.css">
+</head>
+
+<body>
+  <div id="app"></div>
+  <div id="hud">
+    <div id="city-name">Loading...</div>
+    <div id="enemies-down-info">Enemies Down: 0</div>
+    <div id="target-reticle"></div>
+    <div id="center-message"></div>
+    <div id="warning-overlay"></div>
+
+    <div id="hud-bars">
+      <div class="hud-bar-group">
+        <div class="hud-label">SPD</div>
+        <div class="hud-track">
+          <div id="spd-fill" class="hud-fill hud-fill-speed"></div>
+        </div>
+        <div id="spd-val" class="hud-value">0 km/h</div>
+      </div>
+      <div class="hud-bar-group">
+        <div class="hud-label">ALT</div>
+        <div class="hud-track">
+          <div id="alt-fill" class="hud-fill hud-fill-alt"></div>
+        </div>
+        <div id="alt-val" class="hud-value">0 m</div>
+      </div>
+    </div>
+
+    <div id="hp-container">
+      <div class="hp-label">HP</div>
+      <div class="hp-track">
+        <div id="hp-fill"></div>
+      </div>
+      <div id="hp-val">10</div>
+    </div>
+    <div id="cruise-status" class="hud-status">SPD HOLD: 000 km/h</div>
+    <div id="radar">
+      <div id="radar-player"></div>
+    </div>
+  </div>
+  <div id="fail-screen">
+    <div id="fail-title">MISSION FAILED</div>
+    <div id="fail-msg">Want to try again?</div>
+    <div class="fail-buttons">
+      <button id="btn-restart" class="fail-btn btn-yes">Yes</button>
+      <button id="btn-exit" class="fail-btn btn-no">No</button>
+    </div>
+  </div>
+</body>
+
+</html>
