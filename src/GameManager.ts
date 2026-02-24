@@ -881,7 +881,7 @@ export class GameManager {
 
                 // 2. Takeoff Tutorials (Only on Runway)
                 const isNearingEnd = pPos.z < 100; // Halfway through the "exit" part of runway
-                const isFastEnough = speedKmh > 350;
+                const isFastEnough = speedKmh > 250;
                 const isWrongPitch = this.player.input.up; // Pressing Up Arrow (Pitch Down)
                 const isRightPitch = this.player.input.down; // Pressing Down Arrow (Pitch Up)
 

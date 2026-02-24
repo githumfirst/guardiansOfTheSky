@@ -605,8 +605,8 @@ export class Player {
         // Move Forward
         // If on ground (speed < takeoffSpeed), ensure we stay on ground unless pitching up?
         // Actually, simple logic:
-        // Identify Takeoff Speed ~ 400 km/h (111.1 m/s)
-        const takeoffSpeed = 111.1;
+        // Identify Takeoff Speed ~ 250 km/h (69.44 m/s)
+        const takeoffSpeed = 69.44;
         const isOnGround = this.body.position.y <= 2.5; // Close to ground (2.0 is limit)
 
         this.isTryingToTakeoffTooSlow = false;
