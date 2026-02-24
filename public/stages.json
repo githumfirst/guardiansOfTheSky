@@ -1,0 +1,602 @@
+[
+    {
+        "id": 1,
+        "name": "New York",
+        "lat": 40.7128,
+        "lon": -74.0060
+    },
+    {
+        "id": 2,
+        "name": "London",
+        "lat": 51.5074,
+        "lon": -0.1278
+    },
+    {
+        "id": 3,
+        "name": "Paris",
+        "lat": 48.8566,
+        "lon": 2.3522
+    },
+    {
+        "id": 4,
+        "name": "Tokyo",
+        "lat": 35.6762,
+        "lon": 139.6503
+    },
+    {
+        "id": 5,
+        "name": "Seoul",
+        "lat": 37.5665,
+        "lon": 126.9780
+    },
+    {
+        "id": 6,
+        "name": "Beijing",
+        "lat": 39.9042,
+        "lon": 116.4074
+    },
+    {
+        "id": 7,
+        "name": "Moscow",
+        "lat": 55.7558,
+        "lon": 37.6173
+    },
+    {
+        "id": 8,
+        "name": "Sydney",
+        "lat": -33.8688,
+        "lon": 151.2093
+    },
+    {
+        "id": 9,
+        "name": "Cairo",
+        "lat": 30.0444,
+        "lon": 31.2357
+    },
+    {
+        "id": 10,
+        "name": "Rio de Janeiro",
+        "lat": -22.9068,
+        "lon": -43.1729
+    },
+    {
+        "id": 11,
+        "name": "Los Angeles",
+        "lat": 34.0522,
+        "lon": -118.2437
+    },
+    {
+        "id": 12,
+        "name": "Berlin",
+        "lat": 52.5200,
+        "lon": 13.4050
+    },
+    {
+        "id": 13,
+        "name": "Rome",
+        "lat": 41.9028,
+        "lon": 12.4964
+    },
+    {
+        "id": 14,
+        "name": "Dubai",
+        "lat": 25.2048,
+        "lon": 55.2708
+    },
+    {
+        "id": 15,
+        "name": "Singapore",
+        "lat": 1.3521,
+        "lon": 103.8198
+    },
+    {
+        "id": 16,
+        "name": "Hong Kong",
+        "lat": 22.3193,
+        "lon": 114.1694
+    },
+    {
+        "id": 17,
+        "name": "Bangkok",
+        "lat": 13.7563,
+        "lon": 100.5018
+    },
+    {
+        "id": 18,
+        "name": "Mumbai",
+        "lat": 19.0760,
+        "lon": 72.8777
+    },
+    {
+        "id": 19,
+        "name": "Istanbul",
+        "lat": 41.0082,
+        "lon": 28.9784
+    },
+    {
+        "id": 20,
+        "name": "Toronto",
+        "lat": 43.6510,
+        "lon": -79.3470
+    },
+    {
+        "id": 21,
+        "name": "San Francisco",
+        "lat": 37.7749,
+        "lon": -122.4194
+    },
+    {
+        "id": 22,
+        "name": "Barcelona",
+        "lat": 41.3851,
+        "lon": 2.1734
+    },
+    {
+        "id": 23,
+        "name": "Amsterdam",
+        "lat": 52.3676,
+        "lon": 4.9041
+    },
+    {
+        "id": 24,
+        "name": "Chicago",
+        "lat": 41.8781,
+        "lon": -87.6298
+    },
+    {
+        "id": 25,
+        "name": "Madrid",
+        "lat": 40.4168,
+        "lon": -3.7038
+    },
+    {
+        "id": 26,
+        "name": "Vienna",
+        "lat": 48.2082,
+        "lon": 16.3738
+    },
+    {
+        "id": 27,
+        "name": "Mexico City",
+        "lat": 19.4326,
+        "lon": -99.1332
+    },
+    {
+        "id": 28,
+        "name": "Shanghai",
+        "lat": 31.2304,
+        "lon": 121.4737
+    },
+    {
+        "id": 29,
+        "name": "Buenos Aires",
+        "lat": -34.6037,
+        "lon": -58.3816
+    },
+    {
+        "id": 30,
+        "name": "Kuala Lumpur",
+        "lat": 3.1390,
+        "lon": 101.6869
+    },
+    {
+        "id": 31,
+        "name": "Taipei",
+        "lat": 25.0330,
+        "lon": 121.5654
+    },
+    {
+        "id": 32,
+        "name": "Lisbon",
+        "lat": 38.7223,
+        "lon": -9.1393
+    },
+    {
+        "id": 33,
+        "name": "Prague",
+        "lat": 50.0755,
+        "lon": 14.4378
+    },
+    {
+        "id": 34,
+        "name": "Athens",
+        "lat": 37.9838,
+        "lon": 23.7275
+    },
+    {
+        "id": 35,
+        "name": "Dublin",
+        "lat": 53.3498,
+        "lon": -6.2603
+    },
+    {
+        "id": 36,
+        "name": "Jakarta",
+        "lat": -6.2088,
+        "lon": 106.8456
+    },
+    {
+        "id": 37,
+        "name": "Manila",
+        "lat": 14.5995,
+        "lon": 120.9842
+    },
+    {
+        "id": 38,
+        "name": "Delhi",
+        "lat": 28.6139,
+        "lon": 77.2090
+    },
+    {
+        "id": 39,
+        "name": "Sao Paulo",
+        "lat": -23.5505,
+        "lon": -46.6333
+    },
+    {
+        "id": 40,
+        "name": "Lima",
+        "lat": -12.0464,
+        "lon": -77.0428
+    },
+    {
+        "id": 41,
+        "name": "Santiago",
+        "lat": -33.4489,
+        "lon": -70.6693
+    },
+    {
+        "id": 42,
+        "name": "Bogota",
+        "lat": 4.7110,
+        "lon": -74.0721
+    },
+    {
+        "id": 43,
+        "name": "Hanoi",
+        "lat": 21.0285,
+        "lon": 105.8542
+    },
+    {
+        "id": 44,
+        "name": "Ho Chi Minh City",
+        "lat": 10.8231,
+        "lon": 106.6297
+    },
+    {
+        "id": 45,
+        "name": "Vancouver",
+        "lat": 49.2827,
+        "lon": -123.1207
+    },
+    {
+        "id": 46,
+        "name": "Montreal",
+        "lat": 45.5017,
+        "lon": -73.5673
+    },
+    {
+        "id": 47,
+        "name": "Melbourne",
+        "lat": -37.8136,
+        "lon": 144.9631
+    },
+    {
+        "id": 48,
+        "name": "Auckland",
+        "lat": -36.8485,
+        "lon": 174.7633
+    },
+    {
+        "id": 49,
+        "name": "Stockholm",
+        "lat": 59.3293,
+        "lon": 18.0686
+    },
+    {
+        "id": 50,
+        "name": "Oslo",
+        "lat": 59.9139,
+        "lon": 10.7522
+    },
+    {
+        "id": 51,
+        "name": "Copenhagen",
+        "lat": 55.6761,
+        "lon": 12.5683
+    },
+    {
+        "id": 52,
+        "name": "Helsinki",
+        "lat": 60.1699,
+        "lon": 24.9384
+    },
+    {
+        "id": 53,
+        "name": "Warsaw",
+        "lat": 52.2297,
+        "lon": 21.0122
+    },
+    {
+        "id": 54,
+        "name": "Budapest",
+        "lat": 47.4979,
+        "lon": 19.0402
+    },
+    {
+        "id": 55,
+        "name": "Brussels",
+        "lat": 50.8503,
+        "lon": 4.3517
+    },
+    {
+        "id": 56,
+        "name": "Zurich",
+        "lat": 47.3769,
+        "lon": 8.5417
+    },
+    {
+        "id": 57,
+        "name": "Geneva",
+        "lat": 46.2044,
+        "lon": 6.1432
+    },
+    {
+        "id": 58,
+        "name": "Munich",
+        "lat": 48.1351,
+        "lon": 11.5820
+    },
+    {
+        "id": 59,
+        "name": "Frankfurt",
+        "lat": 50.1109,
+        "lon": 8.6821
+    },
+    {
+        "id": 60,
+        "name": "Hamburg",
+        "lat": 53.5511,
+        "lon": 9.9937
+    },
+    {
+        "id": 61,
+        "name": "Milan",
+        "lat": 45.4642,
+        "lon": 9.1900
+    },
+    {
+        "id": 62,
+        "name": "Venice",
+        "lat": 45.4408,
+        "lon": 12.3155
+    },
+    {
+        "id": 63,
+        "name": "Florence",
+        "lat": 43.7696,
+        "lon": 11.2558
+    },
+    {
+        "id": 64,
+        "name": "Naples",
+        "lat": 40.8518,
+        "lon": 14.2681
+    },
+    {
+        "id": 65,
+        "name": "Lyon",
+        "lat": 45.7640,
+        "lon": 4.8357
+    },
+    {
+        "id": 66,
+        "name": "Marseille",
+        "lat": 43.2965,
+        "lon": 5.3698
+    },
+    {
+        "id": 67,
+        "name": "Nice",
+        "lat": 43.7102,
+        "lon": 7.2620
+    },
+    {
+        "id": 68,
+        "name": "Manchester",
+        "lat": 53.4808,
+        "lon": -2.2426
+    },
+    {
+        "id": 69,
+        "name": "Birmingham",
+        "lat": 52.4862,
+        "lon": -1.8904
+    },
+    {
+        "id": 70,
+        "name": "Edinburgh",
+        "lat": 55.9533,
+        "lon": -3.1883
+    },
+    {
+        "id": 71,
+        "name": "Glasgow",
+        "lat": 55.8642,
+        "lon": -4.2518
+    },
+    {
+        "id": 72,
+        "name": "Cape Town",
+        "lat": -33.9249,
+        "lon": 18.4241
+    },
+    {
+        "id": 73,
+        "name": "Johannesburg",
+        "lat": -26.2041,
+        "lon": 28.0473
+    },
+    {
+        "id": 74,
+        "name": "Nairobi",
+        "lat": -1.2921,
+        "lon": 36.8219
+    },
+    {
+        "id": 75,
+        "name": "Tel Aviv",
+        "lat": 32.0853,
+        "lon": 34.7818
+    },
+    {
+        "id": 76,
+        "name": "Jerusalem",
+        "lat": 31.7683,
+        "lon": 35.2137
+    },
+    {
+        "id": 77,
+        "name": "Riyadh",
+        "lat": 24.7136,
+        "lon": 46.6753
+    },
+    {
+        "id": 78,
+        "name": "Doha",
+        "lat": 25.2854,
+        "lon": 51.5310
+    },
+    {
+        "id": 79,
+        "name": "Abu Dhabi",
+        "lat": 24.4539,
+        "lon": 54.3773
+    },
+    {
+        "id": 80,
+        "name": "Tehran",
+        "lat": 35.6892,
+        "lon": 51.3890
+    },
+    {
+        "id": 81,
+        "name": "Baghdad",
+        "lat": 33.3152,
+        "lon": 44.3661
+    },
+    {
+        "id": 82,
+        "name": "Karachi",
+        "lat": 24.8607,
+        "lon": 67.0011
+    },
+    {
+        "id": 83,
+        "name": "Dhaka",
+        "lat": 23.8103,
+        "lon": 90.4125
+    },
+    {
+        "id": 84,
+        "name": "Kathmandu",
+        "lat": 27.7172,
+        "lon": 85.3240
+    },
+    {
+        "id": 85,
+        "name": "Colombo",
+        "lat": 6.9271,
+        "lon": 79.8612
+    },
+    {
+        "id": 86,
+        "name": "Yangon",
+        "lat": 16.8409,
+        "lon": 96.1735
+    },
+    {
+        "id": 87,
+        "name": "Phnom Penh",
+        "lat": 11.5564,
+        "lon": 104.9282
+    },
+    {
+        "id": 88,
+        "name": "Vientiane",
+        "lat": 17.9757,
+        "lon": 102.6331
+    },
+    {
+        "id": 89,
+        "name": "Osaka",
+        "lat": 34.6937,
+        "lon": 135.5023
+    },
+    {
+        "id": 90,
+        "name": "Kyoto",
+        "lat": 35.0116,
+        "lon": 135.7681
+    },
+    {
+        "id": 91,
+        "name": "Sapporo",
+        "lat": 43.0618,
+        "lon": 141.3545
+    },
+    {
+        "id": 92,
+        "name": "Fukuoka",
+        "lat": 33.5902,
+        "lon": 130.4017
+    },
+    {
+        "id": 93,
+        "name": "Busan",
+        "lat": 35.1796,
+        "lon": 129.0756
+    },
+    {
+        "id": 94,
+        "name": "Incheon",
+        "lat": 37.4563,
+        "lon": 126.7052
+    },
+    {
+        "id": 95,
+        "name": "Daegu",
+        "lat": 35.8714,
+        "lon": 128.6014
+    },
+    {
+        "id": 96,
+        "name": "Daejeon",
+        "lat": 36.3504,
+        "lon": 127.3845
+    },
+    {
+        "id": 97,
+        "name": "Gwangju",
+        "lat": 35.1595,
+        "lon": 126.8526
+    },
+    {
+        "id": 98,
+        "name": "Ulsan",
+        "lat": 35.5384,
+        "lon": 129.3114
+    },
+    {
+        "id": 99,
+        "name": "Jeju City",
+        "lat": 33.4996,
+        "lon": 126.5312
+    },
+    {
+        "id": 100,
+        "name": "Sejong",
+        "lat": 36.4800,
+        "lon": 127.2890
+    }
+]
