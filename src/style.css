@@ -811,17 +811,92 @@ body {
   /* Hidden on desktop */
 }
 
-/* Visible only when .mobile-touch is added to body/container */
+/* --- Mobile Specific Overrides (Optimized Layout) --- */
 body.mobile-touch #mobile-controls {
   display: block;
 }
 
+/* Hide desktop-only hints on mobile */
+body.mobile-touch #shift-hint,
+body.mobile-touch #pitch-hint {
+  display: none !important;
+}
+
+body.mobile-touch #hud-bars {
+  left: 20px;
+  /* Move bars to the left */
+  right: auto;
+  bottom: 200px;
+  /* Position above joystick area */
+  top: auto;
+  transform: none;
+  scale: 0.7;
+  z-index: 2600;
+}
+
+body.mobile-touch #radar {
+  top: auto;
+  bottom: 20px;
+  left: 20px;
+  transform: none;
+  width: 120px;
+  height: 120px;
+}
+
+body.mobile-touch #hp-container {
+  top: 10px;
+  scale: 0.8;
+}
+
+body.mobile-touch #enemies-down-info {
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 18px;
+  white-space: nowrap;
+}
+
+body.mobile-touch #city-name {
+  top: 90px;
+  right: auto;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 18px;
+  white-space: nowrap;
+}
+
+body.mobile-touch #cruise-status {
+  top: auto;
+  bottom: 380px;
+  left: 20px;
+  right: auto;
+  transform: none;
+  font-size: 14px;
+}
+
+body.mobile-touch #bgm-toggle {
+  top: 10px;
+  right: 10px;
+  scale: 0.9;
+}
+
+/* Mobile Controls Position Fixes */
 #joystick-zone {
   position: absolute;
-  bottom: 10%;
-  left: 10%;
+  bottom: 50px;
+  left: 20px;
   width: 150px;
   height: 150px;
+  pointer-events: all;
+}
+
+#mobile-actions {
+  position: absolute;
+  bottom: 50px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
   pointer-events: all;
 }
 
@@ -846,16 +921,6 @@ body.mobile-touch #mobile-controls {
   left: 50%;
   transform: translate(-50%, -50%);
   box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
-}
-
-#mobile-actions {
-  position: absolute;
-  bottom: 8%;
-  right: 5%;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  pointer-events: all;
 }
 
 .mobile-btn {
@@ -897,18 +962,9 @@ body.mobile-touch #mobile-controls {
   border-color: #ff0000;
 }
 
-/* Adjust HUD for mobile */
-@media (max-width: 900px) {
-  #hud-bars {
-    right: 10px;
-    scale: 0.8;
-  }
-}
-
 #warning-overlay.flicker {
   animation: hazard-flicker 0.2s infinite alternate;
   color: #ff0000;
-  /* Red for high priority */
   text-shadow: 0 0 20px #ff0000;
 }
 
