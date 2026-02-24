@@ -75,7 +75,7 @@ export class GameManager {
         this.weatherSystem = new WeatherSystem(this.sceneManager);
 
         // Background Music
-        this.bgm = new Audio('./src/bg.m4a');
+        this.bgm = new Audio('/bg.m4a');
         this.bgm.loop = true;
         this.bgm.volume = 0.5;
 

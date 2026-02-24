@@ -54,8 +54,8 @@ export class Player {
 
         if (!Player.afterburnerBuffer) {
             try {
-                // The file is in src/afterburner.mp3
-                const response = await fetch('./src/afterburner.mp3');
+                // The file is in the public folder
+                const response = await fetch('/afterburner.mp3');
                 const arrayBuffer = await response.arrayBuffer();
                 Player.afterburnerBuffer = await Bullet.audioCtx.decodeAudioData(arrayBuffer);
                 console.log("Afterburner sound preloaded!");

@@ -31,8 +31,8 @@ export class Bullet {
 
         if (!Bullet.launchBuffer) {
             try {
-                // Fetch from the public folder (root path in built app)
-                const response = await fetch('./bullet.mp3');
+                // Fetch from the public folder
+                const response = await fetch('/bullet.mp3');
                 const arrayBuffer = await response.arrayBuffer();
                 Bullet.launchBuffer = await ctx.decodeAudioData(arrayBuffer);
                 console.log("Bullet sound preloaded!");
@@ -41,7 +41,7 @@ export class Bullet {
             }
 
             try {
-                const response = await fetch('./crash.mp3');
+                const response = await fetch('/crash.mp3');
                 const arrayBuffer = await response.arrayBuffer();
                 Bullet.explosionBuffer = await ctx.decodeAudioData(arrayBuffer);
                 console.log("Explosion sound preloaded!");
