@@ -853,8 +853,8 @@ body.mobile-touch .hud-track {
 /* Landscape Mode: Elements side-by-side */
 @media (orientation: landscape) {
   body.mobile-touch #hud-bars {
-    left: 150px;
-    /* Next to radar */
+    left: 180px;
+    /* Shifted right to clear thumb */
     right: auto;
     bottom: 20px;
     top: auto;
@@ -864,7 +864,8 @@ body.mobile-touch .hud-track {
 
   body.mobile-touch #radar {
     left: 20px;
-    bottom: 20px;
+    bottom: 180px;
+    /* Moved above joystick area */
     top: auto;
     transform: none;
     width: 110px;
