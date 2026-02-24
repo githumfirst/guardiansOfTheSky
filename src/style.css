@@ -822,25 +822,54 @@ body.mobile-touch #pitch-hint {
   display: none !important;
 }
 
-body.mobile-touch #hud-bars {
-  left: 20px;
-  /* Move bars to the left */
-  right: auto;
-  bottom: 200px;
-  /* Position above joystick area */
-  top: auto;
-  transform: none;
-  scale: 0.7;
-  z-index: 2600;
+body.mobile-touch .hud-track {
+  height: 125px;
+  /* Reduced to 1/2 size */
 }
 
-body.mobile-touch #radar {
-  top: auto;
-  bottom: 20px;
-  left: 20px;
-  transform: none;
-  width: 120px;
-  height: 120px;
+/* Portrait Mode: Elements above joystick */
+@media (orientation: portrait) {
+  body.mobile-touch #hud-bars {
+    left: 20px;
+    right: auto;
+    bottom: 350px;
+    /* High enough to clear radar and joystick */
+    top: auto;
+    transform: none;
+    scale: 0.8;
+  }
+
+  body.mobile-touch #radar {
+    left: 20px;
+    bottom: 210px;
+    /* Directly above joystick area */
+    top: auto;
+    transform: none;
+    width: 120px;
+    height: 120px;
+  }
+}
+
+/* Landscape Mode: Elements side-by-side */
+@media (orientation: landscape) {
+  body.mobile-touch #hud-bars {
+    left: 150px;
+    /* Next to radar */
+    right: auto;
+    bottom: 20px;
+    top: auto;
+    transform: none;
+    scale: 0.8;
+  }
+
+  body.mobile-touch #radar {
+    left: 20px;
+    bottom: 20px;
+    top: auto;
+    transform: none;
+    width: 110px;
+    height: 110px;
+  }
 }
 
 body.mobile-touch #hp-container {
