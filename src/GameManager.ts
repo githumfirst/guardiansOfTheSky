@@ -68,6 +68,7 @@ export class GameManager {
 
     private isGameStarted: boolean = false;
     private startTimer: number = 5.0; // Not used exactly the same way now
+    private lastTime: number = performance.now();
 
     constructor() {
         // Detect Mobile first so subsystems can react
@@ -347,7 +348,18 @@ export class GameManager {
     }
 
     public update() {
-        const dt = 1 / 60;
+        const now = performance.now();
+        let dt: number;
+
+        if (this.isMobile) {
+            // Mobile: Use dynamic delta time to prevent "slow motion" on slow devices
+            dt = (now - this.lastTime) / 1000;
+            if (dt > 0.1) dt = 0.1; // Cap to 0.1s to prevent teleporting
+        } else {
+            // Desktop/Web: Use fixed 60FPS timing for perfect physics stability/smoothness
+            dt = 1 / 60;
+        }
+        this.lastTime = now;
 
         if (this.introState !== IntroState.PLAYING) {
             // Minimal updates for visuals if needed

@@ -23,7 +23,7 @@ export class SceneManager {
         this.camera.lookAt(0, 0, 0);
 
         this.renderer = new THREE.WebGLRenderer({
-            antialias: !this.gameManager.isMobile, // Disable AA on mobile for speed
+            antialias: true, // Re-enabled on all devices per user request
             precision: this.gameManager.isMobile ? 'mediump' : 'highp', // Lower precision on mobile
             powerPreference: 'high-performance'
         });
