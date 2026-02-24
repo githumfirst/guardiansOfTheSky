@@ -54,7 +54,6 @@ export class GameManager {
     private isWarningDismissed: boolean = false;
 
     private introState: IntroState = IntroState.SPLASH;
-    private isTyping: boolean = false;
     private typingInterval: any = null;
 
     // Audio
@@ -998,7 +997,6 @@ export class GameManager {
         // Typing effect
         const storyText = `In 2099, massive shadows descended upon the peaceful cities of Earth.\n\nAn unprovoked, indiscriminate strike by an unknown alien fleet.\n\nThe elite pilots of 'Guardians of the Sky,' humanity's last line of defense, took flight, but the skies crumbled beneath the overwhelming technological divide.\n\nAt the precipice of despair, a single, hidden fighter jet awakens.\n\nThis mysterious machine, having rejected every elite pilot, responds to only one biological signature...\n\nYours. A person who had lived a completely ordinary life until today.\n\nThere is nowhere left to run.\n\nYou are the solitary hope destined to pierce these ashen skies and save our world.\n\nLaunch, the final Guardian of the Sky.`;
 
-        this.isTyping = true;
         const storyEl = document.getElementById('story-content');
         if (!storyEl) return;
 
@@ -1014,14 +1012,12 @@ export class GameManager {
                 i++;
             } else {
                 clearInterval(this.typingInterval);
-                this.isTyping = false;
             }
         }, 30); // 30ms per character
     }
 
     private transitionToControls() {
         if (this.typingInterval) clearInterval(this.typingInterval);
-        this.isTyping = false;
 
         this.introState = IntroState.CONTROLS;
         document.getElementById('screen-story')?.classList.remove('active');
