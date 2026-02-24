@@ -62,13 +62,16 @@ export class GameManager {
     private isMusicOn: boolean = true;
 
     // Mobile
-    private isMobile: boolean = false;
+    public isMobile: boolean = false;
     private joystickData = { active: false, startX: 0, startY: 0, currentX: 0, currentY: 0 };
 
     private isGameStarted: boolean = false;
     private startTimer: number = 5.0; // Not used exactly the same way now
 
     constructor() {
+        // Detect Mobile first so subsystems can react
+        this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 1000;
+
         this.sceneManager = new SceneManager(this);
         this.physicsWorld = new PhysicsWorld();
         this.cityBuilder = new CityBuilder(this.sceneManager, this.physicsWorld);
@@ -84,9 +87,6 @@ export class GameManager {
         if (toggleBtn) {
             toggleBtn.addEventListener('click', () => this.toggleBGM());
         }
-
-        // Detect Mobile
-        this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 1000;
 
         if (this.isMobile) {
             document.body.classList.add('mobile-touch');

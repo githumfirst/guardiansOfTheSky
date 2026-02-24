@@ -5,14 +5,14 @@ export class SceneManager {
     public scene: THREE.Scene;
     public camera: THREE.PerspectiveCamera;
     public renderer: THREE.WebGLRenderer;
-    // private gameManager: GameManager;
+    private gameManager: GameManager;
 
     // Explosion Visuals
     private explosions: any[] = [];
     private speedLines: THREE.LineSegments | null = null;
 
-    constructor(_gameManager: GameManager) { // Use underscore to suppress unused warning
-        // this.gameManager = gameManager;
+    constructor(gameManager: GameManager) {
+        this.gameManager = gameManager;
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(0x87CEEB); // Sky blue
         // Distance Fog: Push back to see distant enemies (Start 1000, End 3000)
@@ -24,7 +24,8 @@ export class SceneManager {
 
         this.renderer = new THREE.WebGLRenderer({ antialias: true });
         this.renderer.setSize(window.innerWidth, window.innerHeight);
-        this.renderer.shadowMap.enabled = true;
+        // Performance: Disable shadows on mobile
+        this.renderer.shadowMap.enabled = !this.gameManager.isMobile;
         document.getElementById('app')!.appendChild(this.renderer.domElement);
 
         this.setupLights();
@@ -39,7 +40,8 @@ export class SceneManager {
 
         const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
         dirLight.position.set(50, 100, 50);
-        dirLight.castShadow = true;
+        // Performance: Disable shadows on mobile
+        dirLight.castShadow = !this.gameManager.isMobile;
         dirLight.shadow.mapSize.width = 2048;
         dirLight.shadow.mapSize.height = 2048;
         this.scene.add(dirLight);
