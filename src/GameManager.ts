@@ -824,9 +824,9 @@ export class GameManager {
             let isHazard = false;
 
             // --- Hazard Detection (High Priority) ---
-            // 1. Missile Detection
+            // 1. Missile Detection (Only threats from others)
             const incomingMissile = this.bullets.find(b => {
-                if (b.isDead) return false;
+                if (b.isDead || b.owner === this.player) return false;
                 const d = b.mesh.position.distanceTo(this.player!.mesh.position);
                 // Within 300m and moving towards us (simple dist check for now)
                 return d < 300;
