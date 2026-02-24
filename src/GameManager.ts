@@ -386,8 +386,10 @@ export class GameManager {
             this.player.input.right = clampedX > 0.2;
             this.player.input.up = clampedY < -0.2;
             this.player.input.down = clampedY > 0.2;
+        }
 
-            // Firing Logic (Semi-Auto)
+        if (this.isMobile && this.player) {
+            // Firing Logic (Semi-Auto) - Moved outside joystick check to work independently
             if (this.player.input.shoot) {
                 if (!this.isMobileShootPressed) {
                     this.shoot();
