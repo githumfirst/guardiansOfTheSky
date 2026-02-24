@@ -556,14 +556,36 @@ body {
 /* Screen 2: Story */
 #screen-story {
   padding: 40px;
+  padding-top: 10vh;
+  /* Anchor content higher to allow downward growth */
   background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  /* Prevent bouncing by anchoring top */
+  align-items: center;
+}
+
+#story-title {
+  font-family: 'Impact', sans-serif;
+  font-size: 48px;
+  color: #ffb800;
+  /* Epic Gold */
+  text-shadow: 0 0 20px rgba(255, 184, 0, 0.6), 0 0 40px rgba(0, 0, 0, 0.8);
+  margin-bottom: 40px;
+  text-align: center;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  animation: title-float 3s infinite alternate ease-in-out;
 }
 
 #story-content {
   font-family: 'Courier New', Courier, monospace;
-  font-size: 28px;
-  line-height: 1.8;
-  max-width: 900px;
+  font-size: 22px;
+  /* Reduced from 28px */
+  line-height: 1.6;
+  max-width: 1100px;
+  /* Increased from 900px */
   text-align: center;
   color: #00ffcc;
   text-shadow: 0 0 10px rgba(0, 255, 204, 0.4);
@@ -586,26 +608,31 @@ body {
 
 #controls-title {
   font-family: 'Impact', sans-serif;
-  font-size: 48px;
+  font-size: 36px;
+  /* Reduced from 48px */
   color: #ffff00;
-  margin-bottom: 60px;
+  margin-bottom: 30px;
+  /* Reduced from 60px */
   text-shadow: 0 0 10px #ffff00;
 }
 
 .controls-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 30px;
+  gap: 20px;
+  /* Reduced from 30px */
   max-width: 1000px;
 }
 
 .control-item {
   background: rgba(255, 255, 255, 0.05);
-  padding: 20px;
+  padding: 15px;
+  /* Reduced from 20px */
   border-left: 5px solid #00ff00;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
+  /* Reduced from 10px */
   min-width: 300px;
 }
 
@@ -616,13 +643,16 @@ body {
 }
 
 .control-item strong {
-  font-size: 24px;
+  font-size: 20px;
+  /* Reduced from 24px */
   color: #fff;
 }
 
 #launch-prompt {
-  margin-top: 60px;
-  font-size: 24px;
+  margin-top: 30px;
+  /* Reduced from 60px */
+  font-size: 20px;
+  /* Reduced from 24px */
   color: #00ff00;
   animation: prompt-blink 1.5s infinite alternate ease-in-out;
 }
@@ -657,7 +687,8 @@ body {
   opacity: 0.7;
 }
 
-#shift-hint .key {
+#shift-hint .key,
+#pitch-hint .key {
   width: 140px;
   height: 60px;
   background: rgba(255, 255, 255, 0.1);
@@ -668,14 +699,46 @@ body {
   justify-content: center;
   align-items: center;
   font-family: 'Impact', sans-serif;
-  font-size: 32px;
+  font-size: 24px;
+  /* Smaller font for long labels */
   color: white;
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
   box-shadow: 0 5px 0 rgba(255, 255, 255, 0.4), 0 0 20px rgba(255, 255, 255, 0.2);
   animation: key-pulse 1.5s infinite ease-in-out;
 }
 
-#shift-hint .hint-text {
+#pitch-hint {
+  position: absolute;
+  bottom: 18%;
+  right: 30%;
+  transform: translateX(50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  z-index: 1000;
+}
+
+#pitch-hint.visible {
+  opacity: 0.7;
+}
+
+#pitch-hint .key {
+  border-color: rgba(255, 255, 0, 0.6);
+  color: #ffff00;
+  font-size: 48px;
+  text-shadow: 0 0 15px rgba(255, 255, 0, 0.6);
+}
+
+#pitch-hint .hint-text {
+  color: #ffff00;
+}
+
+#shift-hint .hint-text,
+#pitch-hint .hint-text {
   font-family: 'Inter', sans-serif;
   font-size: 20px;
   color: #fff;
@@ -704,7 +767,7 @@ body {
 /* BGM Toggle Button */
 #bgm-toggle {
   position: absolute;
-  top: 20px;
+  top: 70px;
   right: 20px;
   z-index: 4000;
   padding: 10px 20px;
@@ -839,6 +902,23 @@ body.mobile-touch #mobile-controls {
   #hud-bars {
     right: 10px;
     scale: 0.8;
+  }
+}
+
+#warning-overlay.flicker {
+  animation: hazard-flicker 0.2s infinite alternate;
+  color: #ff0000;
+  /* Red for high priority */
+  text-shadow: 0 0 20px #ff0000;
+}
+
+@keyframes hazard-flicker {
+  0% {
+    opacity: 0.3;
+  }
+
+  100% {
+    opacity: 1;
   }
 }
 

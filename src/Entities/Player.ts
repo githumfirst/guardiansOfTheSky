@@ -3,6 +3,7 @@ import * as CANNON from 'cannon-es';
 import { SceneManager } from '../SceneManager';
 import { PhysicsWorld } from '../Physics/PhysicsWorld';
 import { Bullet } from './Bullet';
+import { Explosion } from '../Effects/Explosion';
 
 export class Player {
     public mesh: THREE.Group;
@@ -158,7 +159,10 @@ export class Player {
         // Explosion Effect
         this.createExplosion();
 
-        // Play Sound? (Visual requested "Big Effect")
+        // --- ADDED: DETAILED EXPLOSION EFFECT ---
+        // Spawn a large Explosion (scale 2.0) using the Explosion class
+        const exp = new Explosion(this.sceneManager, this.mesh.position.clone(), 2.0);
+        this.sceneManager.addExplosion(exp);
 
         // Notify GameManager (Immediate for sound effects)
         if (this.onDie) this.onDie();
@@ -451,7 +455,10 @@ export class Player {
         // Flight Physics (Local Axis Control)
 
         // 1. Calculate Local Inputs
-        const pitchInput = (this.input.down ? 1 : 0) - (this.input.up ? 1 : 0);
+        // BLOCK PITCH DOWN ON GROUND: Ignore "Up Arrow" if altitude is near zero to prevent clipping issues.
+        const isAtGroundLevel = !this.hasTakenOff && this.body.position.y < 2.2;
+        const effectiveUp = isAtGroundLevel ? false : this.input.up;
+        const pitchInput = (this.input.down ? 1 : 0) - (effectiveUp ? 1 : 0);
         const yawInput = (this.input.left ? 1 : 0) - (this.input.right ? 1 : 0);
         const rollInput = yawInput * 0.5;
 

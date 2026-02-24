@@ -36,6 +36,7 @@ export class GameManager {
     private currentStageIndex: number = 0;
     private score: number = 0;
     private totalEnemiesDown: number = 0;
+    private enemiesSpawnedInStage: number = 0;
     private readonly killsToWin: number = 5; // 5 enemies per stage (Cumulative total tracked separately)
 
     private weatherTimer: number = 10;
@@ -99,6 +100,13 @@ export class GameManager {
         Player.preloadSound();
 
         this.setupIntroInput();
+
+        // Auto-transition from Splash to Story after 2 seconds
+        setTimeout(() => {
+            if (this.introState === IntroState.SPLASH) {
+                this.transitionToStory();
+            }
+        }, 2000);
 
         // Listen for shoot (Semi-Auto: 1 press = 1 shot)
         window.addEventListener('keydown', (e) => {
@@ -216,6 +224,7 @@ export class GameManager {
         const lat = stage.lat || 0;
         const lon = stage.lon || 0;
 
+        this.enemiesSpawnedInStage = 0;
         this.updateHUD();
 
         // Generate City
@@ -248,11 +257,14 @@ export class GameManager {
     private spawnEnemy() {
         if (!this.player) return;
 
+        this.enemiesSpawnedInStage++;
         const pPos = this.player.mesh.position;
         const playerSpeedKmh = this.player.body.velocity.length() * 3.6;
 
         // TAIL-CHASE SCENARIO: 40% chance if player is flying fast (> 500km/h)
-        const isTailChase = playerSpeedKmh > 500 && Math.random() < 0.4;
+        // FORCE INTERCEPT for first 3 spawns to ensure they fly towards player
+        let isTailChase = playerSpeedKmh > 500 && Math.random() < 0.4;
+        if (this.enemiesSpawnedInStage <= 3) isTailChase = false;
 
         let x: number, y: number, z: number;
         let initialQuat: THREE.Quaternion | undefined;
@@ -272,7 +284,10 @@ export class GameManager {
             initialSpeedMs = 500 / 3.6; // Start at ~500km/h for "discovery" feel
         } else {
             // STANDARD INTERCEPT SCENARIO: 70% chance ahead, 30% random
-            const isAhead = Math.random() < 0.7;
+            // FORCE AHEAD for first 3 spawns
+            let isAhead = Math.random() < 0.7;
+            if (this.enemiesSpawnedInStage <= 3) isAhead = true;
+
             let angle: number;
 
             if (isAhead) {
@@ -356,27 +371,6 @@ export class GameManager {
             return;
         }
 
-        // --- Acceleration Hint Logic ---
-        if (this.player) {
-            const shiftHint = document.getElementById('shift-hint');
-            if (shiftHint) {
-                // Show hint if on runway and NOT pressing throttle up
-                const shouldShow = !this.player.hasTakenOff && !this.player.input.throttleUp;
-                if (shouldShow) {
-                    shiftHint.classList.add('visible');
-                    // Mobile Specific Text
-                    const hintText = shiftHint.querySelector('.hint-text');
-                    const hintKey = shiftHint.querySelector('.key');
-                    if (this.isMobile && hintText && hintKey) {
-                        hintKey.textContent = 'ACCEL';
-                        hintText.textContent = 'Hold Button to Takeoff';
-                    }
-                } else {
-                    shiftHint.classList.remove('visible');
-                }
-            }
-        }
-
         // --- Mobile Joystick Input Mapping ---
         if (this.isMobile && this.player && this.joystickData.active) {
             // Normalize joystick input (-1 to 1)
@@ -387,8 +381,6 @@ export class GameManager {
             const clampedY = Math.max(-1, Math.min(1, dy));
 
             // Map to player input
-            // dx -> Yaw (Left/Right)
-            // dy -> Pitch (Up/Down)
             this.player.input.left = clampedX < -0.2;
             this.player.input.right = clampedX > 0.2;
             this.player.input.up = clampedY < -0.2;
@@ -413,7 +405,7 @@ export class GameManager {
             // Weather Update
             this.weatherSystem.update(dt, this.player.mesh.position);
 
-            // Update Flight Instruments
+            // Update Flight Instruments (Includes Warnings & Tutorials)
             this.updateFlightInstruments();
 
             // Takeoff Check
@@ -425,14 +417,10 @@ export class GameManager {
 
             // Spawn Logic (Maintain 3-10 Enemies)
             if (this.hasTakenOff && this.score < this.killsToWin) {
-                // If less than 3 enemies, spawn immediately/quickly
-                // If less than 10, spawn normally
-
                 const currentCount = this.enemies.length;
                 let needed = false;
 
                 if (currentCount < 3) {
-                    // Force spawn immediately if very low count
                     this.spawnTimer = this.spawnDelay + 1;
                     needed = true;
                 } else if (currentCount < 10) {
@@ -452,7 +440,7 @@ export class GameManager {
         // Weather Cycle
         this.weatherTimer -= dt;
         if (this.weatherTimer <= 0) {
-            this.weatherTimer = 10; // Reset to 10s
+            this.weatherTimer = 10;
             this.changeWeather();
         }
 
@@ -460,20 +448,17 @@ export class GameManager {
         const playerPos = this.player ? this.player.mesh.position : new THREE.Vector3(0, 0, 0);
         const playerVel = this.player ? this.player.body.velocity : new CANNON.Vec3(0, 0, 0);
 
-        // Count current aggressive enemies
         let aggressiveCount = 0;
         this.enemies.forEach(e => {
             if (e.isAggressive) aggressiveCount++;
         });
 
         this.enemies.forEach((e, index) => {
-            // Assign aggressive behavior to at least 1 enemy (reduced from 2)
             if (aggressiveCount < 1 && !e.isAggressive) {
                 e.isAggressive = true;
                 aggressiveCount++;
             }
 
-            // Set missile firing callback
             if (!(e as any).onShoot) {
                 (e as any).onShoot = (spawnPos: THREE.Vector3, quat: THREE.Quaternion) => {
                     const bullet = new Bullet(
@@ -481,41 +466,32 @@ export class GameManager {
                         this.physicsWorld,
                         spawnPos,
                         quat,
-                        this.player, // Target the player
+                        this.player,
                         null
                     );
-                    bullet.owner = e; // Flag as enemy-owned
+                    bullet.owner = e;
                     this.bullets.push(bullet);
                 };
             }
 
             e.update(dt, playerPos, playerVel);
 
-            // Environment Crash Check (Flagged by Enemy.ts collide listener)
             if (e.isDead) {
-                console.log("Enemy World Crash!");
-                // Temporary reset isDead to false so handleEnemyDestruction can proceed (it checks e.isDead internally)
                 e.isDead = false;
                 this.handleEnemyDestruction(e, index, false);
                 return;
             }
 
-            // If enemy is too far behind (> 2500m), recycle them
             const dist = e.mesh.position.distanceTo(playerPos);
             if (dist > 2500) {
                 e.dispose();
                 this.enemies.splice(index, 1);
-                this.spawnEnemy(); // Respawn likely ahead
+                this.spawnEnemy();
                 return;
             }
 
-            // Player-Enemy Collision (Crashing)
-            // Distance check is now moved to Physics Collide Event for reliability
-
-            // Ground Crash Check (Fallback: Altitude < 20m)
             if (e.mesh.position.y < 20) {
-                console.log("Enemy Ground Crash!");
-                this.handleEnemyDestruction(e, index, false); // false = not a collision with player
+                this.handleEnemyDestruction(e, index, false);
                 return;
             }
         });
@@ -524,19 +500,16 @@ export class GameManager {
         for (let i = this.bullets.length - 1; i >= 0; i--) {
             const b = this.bullets[i];
             b.update(dt);
-            if (b.isDead) { // Handled by Bullet internally (distance/time)
+            if (b.isDead) {
                 b.dispose();
                 this.bullets.splice(i, 1);
                 continue;
             }
 
-            // Missile (Bullet) vs Player Check
-            // Skip check if the missile was fired by the player
             if (this.player && !this.player.isDead && b.owner !== this.player) {
                 const distToPlayer = b.mesh.position.distanceTo(this.player.mesh.position);
-                if (distToPlayer < 5) { // Missile hit radius
-                    console.log("Player Hit by Missile!");
-                    this.player.takeDamage(0.5); // Halved again from 1
+                if (distToPlayer < 5) {
+                    this.player.takeDamage(0.5);
                     b.explode();
                     b.dispose();
                     this.bullets.splice(i, 1);
@@ -547,12 +520,10 @@ export class GameManager {
             for (let j = this.enemies.length - 1; j >= 0; j--) {
                 const e = this.enemies[j];
                 const dist = b.mesh.position.distanceTo(e.mesh.position);
-                if (dist < 3) { // Use radius
-                    console.log("Enemy Hit!");
+                if (dist < 3) {
                     e.dispose();
                     this.enemies.splice(j, 1);
-
-                    b.explode(); // Trigger Explosion
+                    b.explode();
                     Bullet.playExplosionSound(0.6);
                     b.dispose();
                     this.addScore();
@@ -821,32 +792,106 @@ export class GameManager {
             }
         }
 
-        // --- Flight Safety Warnings ---
+        // --- Flight Safety Warnings & Takeoff Tutorials ---
         const warningEl = document.getElementById('warning-overlay');
+        const shiftHint = document.getElementById('shift-hint');
+        const pitchHint = document.getElementById('pitch-hint');
+
+        // Hide hints by default
+        if (shiftHint) shiftHint.classList.remove('visible');
+        if (pitchHint) pitchHint.classList.remove('visible');
+
         if (warningEl) {
             let warningText = "";
             let shouldShow = false;
             let useHtml = false;
+            let isHazard = false;
 
-            // Priority 1: Takeoff Speed Warning (Centered, Flashing)
-            const runwayDist = Math.abs(500 - this.player.body.position.z);
-            if (this.player.isTryingToTakeoffTooSlow) {
-                warningText = `Speed Up to <span style="color:red">400km/h</span>!!!`;
+            // --- Hazard Detection (High Priority) ---
+            // 1. Missile Detection
+            const incomingMissile = this.bullets.find(b => {
+                if (b.isDead) return false;
+                const d = b.mesh.position.distanceTo(this.player!.mesh.position);
+                // Within 300m and moving towards us (simple dist check for now)
+                return d < 300;
+            });
+
+            if (incomingMissile) {
+                warningText = "MISSILE!!!";
                 shouldShow = true;
-                useHtml = true;
+                isHazard = true;
             }
-            // New Priority: Failed to take off within 400m (More proactive)
-            else if (!this.hasTakenOff && runwayDist > 400) {
-                warningText = "Pull Up!!!";
-                shouldShow = true;
+
+            // 2. Traffic Detection (If no missile)
+            if (!shouldShow) {
+                const closeEnemy = this.enemies.find(e => {
+                    if (e.isDead) return false;
+                    const d = e.mesh.position.distanceTo(this.player!.mesh.position);
+                    return d < 100; // 100m proximity
+                });
+                if (closeEnemy) {
+                    warningText = "TRAFFIC!!!";
+                    shouldShow = true;
+                    isHazard = true;
+                }
             }
-            // Priority 2: Pull Up over Stall
-            else if (altitude < 30 && this.hasTakenOff) {
-                warningText = "Pull Up!!!";
-                shouldShow = true;
-            } else if (speedKmh < 100 && this.hasTakenOff) {
-                warningText = "Stall!!!";
-                shouldShow = true;
+
+            // Runway Boundaries (Z: -350 to 550, X: 70 to 130)
+            const pPos = this.player.body.position;
+            const isOnGround = !this.hasTakenOff && altitude < 3.0;
+
+            if (isOnGround && !isHazard) {
+                // 1. Runway Exit Crash Logic
+                const offX = pPos.x < 70 || pPos.x > 130;
+                const offZ = pPos.z < -350 || pPos.z > 550;
+
+                if (offX || offZ) {
+                    console.log("Player exited runway on ground! Crash.");
+                    this.player.takeDamage(100); // Instant death
+                    return;
+                }
+
+                // 2. Takeoff Tutorials (Only on Runway)
+                const isNearingEnd = pPos.z < 100; // Halfway through the "exit" part of runway
+                const isFastEnough = speedKmh > 350;
+                const isWrongPitch = this.player.input.up; // Pressing Up Arrow (Pitch Down)
+                const isRightPitch = this.player.input.down; // Pressing Down Arrow (Pitch Up)
+
+                if (!this.player.input.throttleUp && speedKmh < 100) {
+                    // Show L-Shift hint if stationary or slow
+                    if (shiftHint) {
+                        shiftHint.classList.add('visible');
+                        const hintText = shiftHint.querySelector('.hint-text');
+                        const hintKey = shiftHint.querySelector('.key');
+                        if (this.isMobile && hintText && hintKey) {
+                            hintKey.textContent = 'ACCEL';
+                            hintText.textContent = 'Hold Button to Takeoff';
+                        }
+                    }
+                } else if (isFastEnough || isNearingEnd || isWrongPitch || isRightPitch) {
+                    // Show Down Arrow (PULL UP) hint
+                    if (pitchHint) {
+                        pitchHint.classList.add('visible');
+                        const hintText = pitchHint.querySelector('.hint-text');
+                        if (this.isMobile && hintText) {
+                            hintText.textContent = 'Pull Joystick Down';
+                        }
+                    }
+
+                    if (isFastEnough || isNearingEnd || isWrongPitch) {
+                        warningText = "PULL UP!!!";
+                        shouldShow = true;
+                    }
+                }
+            } else if (!isHazard) {
+                // Airborne Warnings
+                if (altitude < 30 && this.hasTakenOff) {
+                    warningText = "PULL UP!!!";
+                    shouldShow = true;
+                } else if (speedKmh < 100 && this.hasTakenOff) {
+                    warningText = "STALL!!!";
+                    shouldShow = true;
+                }
             }
 
             if (shouldShow) {
@@ -861,13 +906,18 @@ export class GameManager {
                     else warningEl.textContent = warningText;
 
                     warningEl.classList.add('visible');
+                    if (isHazard) warningEl.classList.add('flicker');
+                    else warningEl.classList.remove('flicker');
+
                     this.startSiren();
                 } else {
                     warningEl.classList.remove('visible');
+                    warningEl.classList.remove('flicker');
                     this.stopSiren();
                 }
             } else {
                 warningEl.classList.remove('visible');
+                warningEl.classList.remove('flicker');
                 this.stopSiren();
                 this.currentWarningText = "";
                 this.isWarningDismissed = false;
