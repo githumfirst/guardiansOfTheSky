@@ -29,9 +29,9 @@ export class SceneManager {
         });
         this.renderer.setSize(window.innerWidth, window.innerHeight);
 
-        // Performance: Ultra-Low resolution on mobile (DPR 0.5) for maximum framerate
+        // Performance: Mobile resolution optimized (DPR 0.75) for balance of quality and speed
         // Desktop remains at native resolution (DPR window.devicePixelRatio)
-        const dpr = this.gameManager.isMobile ? 0.5 : window.devicePixelRatio;
+        const dpr = this.gameManager.isMobile ? 0.75 : window.devicePixelRatio;
         this.renderer.setPixelRatio(dpr);
 
         // Performance: Disable shadows on mobile

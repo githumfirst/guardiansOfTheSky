@@ -879,7 +879,8 @@ body.mobile-touch #hp-container {
 }
 
 body.mobile-touch #enemies-down-info {
-  top: 60px;
+  top: 70px;
+  /* Pushed down slightly */
   left: 50%;
   transform: translateX(-50%);
   font-size: 18px;
@@ -887,7 +888,8 @@ body.mobile-touch #enemies-down-info {
 }
 
 body.mobile-touch #city-name {
-  top: 90px;
+  top: 100px;
+  /* Pushed down slightly more */
   right: auto;
   left: 50%;
   transform: translateX(-50%);
@@ -897,7 +899,8 @@ body.mobile-touch #city-name {
 
 body.mobile-touch #cruise-status {
   top: auto;
-  bottom: 380px;
+  bottom: 430px;
+  /* Higher position to avoid gauges and HUD numbers */
   left: 20px;
   right: auto;
   transform: none;
@@ -905,9 +908,19 @@ body.mobile-touch #cruise-status {
 }
 
 body.mobile-touch #bgm-toggle {
-  top: 10px;
-  right: 10px;
-  scale: 0.9;
+  top: 15px;
+  right: 15px;
+  scale: 0.8;
+  /* Moved out of the way of HP bar center */
+}
+
+@media (orientation: portrait) {
+  body.mobile-touch #bgm-toggle {
+    top: 130px;
+    /* Fully below HP bar, Score, and City name in portrait */
+    right: 50%;
+    transform: translateX(50%);
+  }
 }
 
 /* Mobile Controls Position Fixes */
