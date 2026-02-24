@@ -22,12 +22,16 @@ export class SceneManager {
         this.camera.position.set(0, 5, 10);
         this.camera.lookAt(0, 0, 0);
 
-        this.renderer = new THREE.WebGLRenderer({ antialias: true });
+        this.renderer = new THREE.WebGLRenderer({
+            antialias: !this.gameManager.isMobile, // Disable AA on mobile for speed
+            precision: this.gameManager.isMobile ? 'mediump' : 'highp', // Lower precision on mobile
+            powerPreference: 'high-performance'
+        });
         this.renderer.setSize(window.innerWidth, window.innerHeight);
 
-        // Performance: Significantly lower resolution on mobile (DPR 1.0) for maximum speed
+        // Performance: Ultra-Low resolution on mobile (DPR 0.5) for maximum framerate
         // Desktop remains at native resolution (DPR window.devicePixelRatio)
-        const dpr = this.gameManager.isMobile ? 1.0 : window.devicePixelRatio;
+        const dpr = this.gameManager.isMobile ? 0.5 : window.devicePixelRatio;
         this.renderer.setPixelRatio(dpr);
 
         // Performance: Disable shadows on mobile
@@ -59,7 +63,7 @@ export class SceneManager {
         this.renderer.setSize(window.innerWidth, window.innerHeight);
 
         // Ensure pixel ratio remains optimized after resize
-        const dpr = this.gameManager.isMobile ? 1.0 : window.devicePixelRatio;
+        const dpr = this.gameManager.isMobile ? 0.5 : window.devicePixelRatio;
         this.renderer.setPixelRatio(dpr);
     }
 
