@@ -1,4 +1,8 @@
 import * as THREE from 'three';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
+import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader.js';
 import type { GameManager } from './GameManager';
 
 export class SceneManager {
@@ -6,6 +10,15 @@ export class SceneManager {
     public camera: THREE.PerspectiveCamera;
     public renderer: THREE.WebGLRenderer;
     private gameManager: GameManager;
+
+    // Post-processing
+    private composer: EffectComposer | null = null;
+    private fxaaPass: ShaderPass | null = null;
+
+    // Adaptive Resolution
+    private currentDPR: number = 1.0;
+    private frameTimes: number[] = [];
+    private lastDPRUpdate: number = 0;
 
     // Explosion Visuals
     private explosions: any[] = [];
@@ -23,16 +36,21 @@ export class SceneManager {
         this.camera.lookAt(0, 0, 0);
 
         this.renderer = new THREE.WebGLRenderer({
-            antialias: true, // Re-enabled on all devices per user request
+            antialias: !this.gameManager.isMobile, // Use native MSAA on desktop, FXAA on mobile
             precision: this.gameManager.isMobile ? 'mediump' : 'highp', // Lower precision on mobile
             powerPreference: 'high-performance'
         });
         this.renderer.setSize(window.innerWidth, window.innerHeight);
 
-        // Performance: Mobile resolution significantly improved (DPR 1.125) for high-end sharpness
-        // Desktop remains at native resolution (DPR window.devicePixelRatio)
-        const dpr = this.gameManager.isMobile ? 1.125 : window.devicePixelRatio;
-        this.renderer.setPixelRatio(dpr);
+        // Performance: Unlock native DPR on mobile, but start conservatively if device is slow
+        this.currentDPR = window.devicePixelRatio || 1.0;
+        if (this.gameManager.isMobile && this.currentDPR > 2) this.currentDPR = 2; // Cap initial mobile DPR to 2.0
+        this.renderer.setPixelRatio(this.currentDPR);
+
+        // Setup Post-processing for Mobile (FXAA)
+        if (this.gameManager.isMobile) {
+            this.setupPostProcessing();
+        }
 
         // Performance: Disable shadows on mobile
         this.renderer.shadowMap.enabled = !this.gameManager.isMobile;
@@ -42,6 +60,23 @@ export class SceneManager {
         this.setupSpeedLines();
 
         window.addEventListener('resize', () => this.onWindowResize(), false);
+    }
+
+    private setupPostProcessing() {
+        this.composer = new EffectComposer(this.renderer);
+        const renderPass = new RenderPass(this.scene, this.camera);
+        this.composer.addPass(renderPass);
+
+        this.fxaaPass = new ShaderPass(FXAAShader);
+        this.updateFXAAResolution();
+        this.composer.addPass(this.fxaaPass);
+    }
+
+    private updateFXAAResolution() {
+        if (!this.fxaaPass) return;
+        const pixelRatio = this.renderer.getPixelRatio();
+        this.fxaaPass.material.uniforms['resolution'].value.x = 1 / (window.innerWidth * pixelRatio);
+        this.fxaaPass.material.uniforms['resolution'].value.y = 1 / (window.innerHeight * pixelRatio);
     }
 
     private setupLights() {
@@ -61,10 +96,10 @@ export class SceneManager {
         this.camera.aspect = window.innerWidth / window.innerHeight;
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
-
-        // Ensure pixel ratio remains optimized after resize
-        const dpr = this.gameManager.isMobile ? 0.5 : window.devicePixelRatio;
-        this.renderer.setPixelRatio(dpr);
+        if (this.composer) {
+            this.composer.setSize(window.innerWidth, window.innerHeight);
+            this.updateFXAAResolution();
+        }
     }
 
 
@@ -108,6 +143,11 @@ export class SceneManager {
     }
 
     public update(dt: number, target?: THREE.Object3D, currentSpeedKmh: number = 0) {
+        // Update Adaptive Resolution on Mobile
+        if (this.gameManager.isMobile) {
+            this.updateAdaptiveDPR(dt);
+        }
+
         // Update Explosions
         for (let i = this.explosions.length - 1; i >= 0; i--) {
             const exp = this.explosions[i];
@@ -120,41 +160,67 @@ export class SceneManager {
 
         if (target) {
             // 1. Dynamic FOV: Increase FOV as speed increases for sense of speed
-            // Base 75, Max 95 (at 800 km/h)
             const baseFOV = 75;
             const maxFOV = 95;
             const speedFactor = Math.min(1.0, currentSpeedKmh / 800);
             const targetFOV = baseFOV + (maxFOV - baseFOV) * speedFactor;
 
-            // Smoothly interpolate FOV
             this.camera.fov = THREE.MathUtils.lerp(this.camera.fov, targetFOV, 0.1);
             this.camera.updateProjectionMatrix();
 
             // 2. Speed Lines: Fade in when > 200 km/h
             if (this.speedLines) {
-                const lineOpacity = Math.max(0, (currentSpeedKmh - 200) / 600); // 0 at 200, 1.0 at 800
+                const lineOpacity = Math.max(0, (currentSpeedKmh - 200) / 600);
                 (this.speedLines.material as THREE.LineBasicMaterial).opacity = lineOpacity;
                 this.speedLines.visible = lineOpacity > 0;
-
-                // Jitter speed lines for "flying past" effect
                 this.speedLines.position.z = (Date.now() % 100) / 100 * 5;
             }
 
-            // Third person camera offset
             const offset = new THREE.Vector3(0, 5, 10);
             offset.applyQuaternion(target.quaternion);
 
             const cameraPos = target.position.clone().add(offset);
-            // Fix: Use a much faster lerp (or instant) to prevent the camera from lagging behind at high speeds.
-            // User reported the plane gets "too small" (distance increases) when speeding up.
-            // Increasing lerp factor from 0.1 to 0.8 keeps it tight.
             this.camera.position.lerp(cameraPos, 0.8);
 
-            // Look slightly above the target to lower the plane on screen
-            // Offset Y + 5.0
             const lookTarget = target.position.clone().add(new THREE.Vector3(0, 5, 0).applyQuaternion(target.quaternion));
             this.camera.lookAt(lookTarget);
         }
-        this.renderer.render(this.scene, this.camera);
+
+        if (this.composer) {
+            this.composer.render();
+        } else {
+            this.renderer.render(this.scene, this.camera);
+        }
+    }
+
+    private updateAdaptiveDPR(dt: number) {
+        this.frameTimes.push(dt);
+        if (this.frameTimes.length > 60) this.frameTimes.shift();
+
+        const now = performance.now();
+        // Check performance every 2 seconds
+        if (now - this.lastDPRUpdate > 2000 && this.frameTimes.length >= 60) {
+            const avgFrameTime = this.frameTimes.reduce((a, b) => a + b) / this.frameTimes.length;
+
+            // If avg frame time > 40ms (below 25fps), lower DPR
+            if (avgFrameTime > 0.040 && this.currentDPR > 0.5) {
+                this.currentDPR = Math.max(0.5, this.currentDPR - 0.25);
+                this.renderer.setPixelRatio(this.currentDPR);
+                if (this.composer) this.updateFXAAResolution();
+                this.lastDPRUpdate = now;
+                console.log(`Performance low. Adjusting DPR to: ${this.currentDPR}`);
+            }
+            // If avg frame time < 20ms (above 50fps), potentially increase DPR up to native
+            else if (avgFrameTime < 0.020 && this.currentDPR < window.devicePixelRatio) {
+                const targetDPR = Math.min(window.devicePixelRatio, this.currentDPR + 0.25);
+                if (targetDPR !== this.currentDPR) {
+                    this.currentDPR = targetDPR;
+                    this.renderer.setPixelRatio(this.currentDPR);
+                    if (this.composer) this.updateFXAAResolution();
+                    this.lastDPRUpdate = now;
+                    console.log(`Performance stable. Raising DPR to: ${this.currentDPR}`);
+                }
+            }
+        }
     }
 }
