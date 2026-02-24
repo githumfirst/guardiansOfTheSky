@@ -126,9 +126,9 @@ export class SceneManager {
             this.camera.fov = THREE.MathUtils.lerp(this.camera.fov, targetFOV, 0.1);
             this.camera.updateProjectionMatrix();
 
-            // 2. Speed Lines: Fade in when > 400 km/h
+            // 2. Speed Lines: Fade in when > 200 km/h
             if (this.speedLines) {
-                const lineOpacity = Math.max(0, (currentSpeedKmh - 400) / 400); // 0 at 400, 1.0 at 800
+                const lineOpacity = Math.max(0, (currentSpeedKmh - 200) / 600); // 0 at 200, 1.0 at 800
                 (this.speedLines.material as THREE.LineBasicMaterial).opacity = lineOpacity;
                 this.speedLines.visible = lineOpacity > 0;
 

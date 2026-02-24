@@ -64,6 +64,7 @@ export class GameManager {
     // Mobile
     public isMobile: boolean = false;
     private joystickData = { active: false, startX: 0, startY: 0, currentX: 0, currentY: 0 };
+    private isMobileShootPressed: boolean = false;
 
     private isGameStarted: boolean = false;
     private startTimer: number = 5.0; // Not used exactly the same way now
@@ -385,6 +386,19 @@ export class GameManager {
             this.player.input.right = clampedX > 0.2;
             this.player.input.up = clampedY < -0.2;
             this.player.input.down = clampedY > 0.2;
+
+            // Firing Logic (Semi-Auto)
+            if (this.player.input.shoot) {
+                if (!this.isMobileShootPressed) {
+                    this.shoot();
+                    this.isMobileShootPressed = true;
+                    // Resume audio context for firing sound if needed
+                    Bullet.resumeContext();
+                    Player.resumeContext();
+                }
+            } else {
+                this.isMobileShootPressed = false;
+            }
         }
 
         this.physicsWorld.update(dt);
