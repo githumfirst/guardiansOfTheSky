@@ -24,6 +24,12 @@ export class SceneManager {
 
         this.renderer = new THREE.WebGLRenderer({ antialias: true });
         this.renderer.setSize(window.innerWidth, window.innerHeight);
+
+        // Performance: Cap resolution on mobile to ~1080p (DPR 2.0 is typical for 1080p density)
+        // Desktop remains at native resolution (DPR window.devicePixelRatio)
+        const dpr = this.gameManager.isMobile ? Math.min(window.devicePixelRatio, 2.0) : window.devicePixelRatio;
+        this.renderer.setPixelRatio(dpr);
+
         // Performance: Disable shadows on mobile
         this.renderer.shadowMap.enabled = !this.gameManager.isMobile;
         document.getElementById('app')!.appendChild(this.renderer.domElement);
@@ -51,6 +57,10 @@ export class SceneManager {
         this.camera.aspect = window.innerWidth / window.innerHeight;
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
+
+        // Ensure pixel ratio remains optimized after resize
+        const dpr = this.gameManager.isMobile ? Math.min(window.devicePixelRatio, 2.0) : window.devicePixelRatio;
+        this.renderer.setPixelRatio(dpr);
     }
 
 
