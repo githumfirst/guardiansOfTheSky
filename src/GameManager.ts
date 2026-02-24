@@ -858,15 +858,9 @@ export class GameManager {
                 const isRightPitch = this.player.input.down; // Pressing Down Arrow (Pitch Up)
 
                 if (!this.player.input.throttleUp && speedKmh < 100) {
-                    // Show L-Shift hint if stationary or slow
-                    if (shiftHint) {
+                    // Show L-Shift hint if stationary or slow (Desktop only)
+                    if (shiftHint && !this.isMobile) {
                         shiftHint.classList.add('visible');
-                        const hintText = shiftHint.querySelector('.hint-text');
-                        const hintKey = shiftHint.querySelector('.key');
-                        if (this.isMobile && hintText && hintKey) {
-                            hintKey.textContent = 'ACCEL';
-                            hintText.textContent = 'Hold Button to Takeoff';
-                        }
                     }
                 } else if (isFastEnough || isNearingEnd || isWrongPitch || isRightPitch) {
                     // Show Down Arrow (PULL UP) hint
